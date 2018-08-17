@@ -1,8 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {SchedulingService} from './scheduling.service';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
+
+interface Item {
+  id: number;
+  title: string;
+}
 
 @Component({
   selector: 'app-root',
@@ -10,31 +12,39 @@ import {Observable} from 'rxjs/Observable';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  private stream$: BehaviorSubject<Array<Object>> = new BehaviorSubject<Array<Object>>([]);
+  data: Array<Item> = [];
 
   constructor (
     public schedulingService: SchedulingService,
-    public http: HttpClient,
   ) {}
 
   ngOnInit () {
-    console.error('ngOnInit', this.stream$);
+    console.error('ngOnInit');
+    this.data = [
+      {id: 1, title: 'foo'},
+      {id: 2, title: 'bar'},
+      {id: 3, title: 'baz'}
+    ];
+  }
 
-    this.stream$.subscribe(item => {
-      console.error('Subscription', item);
+  getItems () {
+    this.schedulingService.getItems().subscribe((items: Array<Item>) => {
+      console.error('getItems subscribe', items);
+      this.data.push(...items);
     });
   }
 
-  download () {
-    console.error('download');
-
-    this.http.get('http://jsonplaceholder.typicode.com/posts/')
-      .toPromise().then((data: Array<Object>) => {
-        this.stream$.next(data);
-      });
+  setItem () {
+    this.schedulingService.setItem().subscribe((item: Item) => {
+      console.error('setItem subscribe', item);
+      this.data.unshift(item);
+    });
   }
 
-  getStream () {
-    return this.stream$;
+  deleteItem () {
+    this.schedulingService.deleteItem(/*id*/).subscribe((item: Item) => {
+      console.error('deleteItem subscribe', item);
+      this.data = this.data.slice(1);
+    });
   }
 }

@@ -1,5 +1,9 @@
 <div>
-  Hello App
-  <button (click)="download()">Download</button>
-  <div *ngFor="let item of (getStream() | async)">{{item.title}}</div>
+  <h1>Hello App</h1>
+
+  <button (click)="getItems()">getItems</button>
+  <button (click)="setItem()">setItem</button>
+  <button (click)="deleteItem()">deleteItem</button>
+
+  <div *ngFor="let item of data">{{item.title}}</div>
 </div>
