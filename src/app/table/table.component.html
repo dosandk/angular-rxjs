@@ -1,0 +1,13 @@
+<div>
+  <h1>Table</h1>
+
+  <div>
+    <div *ngFor="let item of (data.value)">
+      <div>
+        {{item.title}}
+      </div>
+      <div (click)="removeItem(item.id)" style="font-weight: bold">Remove</div>
+      <br>
+    </div>
+  </div>
+</div>
